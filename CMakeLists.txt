@@ -1,0 +1,50 @@
+cmake_minimum_required(VERSION 3.3)
+project(studyProject)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+message("${CMAKE_BUILD_TYPE}")
+
+if(MSVC)
+  # Force to always compile with W4
+  set(CMAKE_CXX_FLAGS"${CMAKE_CXX_FLAGS} /W4")
+
+elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+  # Update if necessary
+  set(CMAKE_CXX_FLAGS"${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -pedantic")
+endif()
+
+#预定义宏
+add_definitions(-D _SILENCE_CXX17_RESULT_OF_DEPRECATION_WARNING)
+add_definitions(-D __windows__)
+add_definitions(-D _CRT_SECURE_NO_WARNINGS)
+function(assign_source_group)
+    foreach(_source IN ITEMS ${ARGN})
+        if (IS_ABSOLUTE "${_source}")
+            file(RELATIVE_PATH _source_rel "${CMAKE_CURRENT_SOURCE_DIR}" "${_source}")
+        else()
+            set(_source_rel "${_source}")
+        endif()
+        get_filename_component(_source_path "${_source_rel}" PATH)
+        string(REPLACE "/" "\\" _source_path_msvc "${_source_path}")
+        source_group("${_source_path_msvc}" FILES "${_source}")
+    endforeach()
+endfunction(assign_source_group)
+ 
+function(my_add_library)
+    foreach(_source IN ITEMS ${ARGN})
+        assign_source_group(${_source})
+    endforeach()
+    add_library(${ARGV})
+endfunction(my_add_library)
+
+function(my_add_executable)
+    foreach(_source IN ITEMS ${ARGN})
+        assign_source_group(${_source})
+    endforeach()
+    add_executable(${ARGV})
+endfunction(my_add_executable)
+
+include(${PROJECT_SOURCE_DIR}/D3D11Study/CMakeLists.txt)
+include(${PROJECT_SOURCE_DIR}/D3D12Study/CMakeLists.txt)
