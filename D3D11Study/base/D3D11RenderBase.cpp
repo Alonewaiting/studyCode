@@ -112,7 +112,7 @@ bool D3D11RenderBase::initD3D11(HINSTANCE hInstance, HWND hWnd)
     if (FAILED(hr))
         return hr;
 
-    m_pImmediateContext->OMSetRenderTargets(1, m_pRenderTargetView.GetAddressOf(), 0);
+    m_pImmediateContext->OMSetRenderTargets(1, m_pRenderTargetView.GetAddressOf(),0);
 
     //setup the viewport
     D3D11_VIEWPORT vp;

@@ -14,6 +14,7 @@ struct Size2d
     uint64_t m_width;
     uint64_t m_height;
 };
+
 struct VertexPos {
     DirectX::XMFLOAT3 pos;
     DirectX::XMFLOAT2 tex0;
